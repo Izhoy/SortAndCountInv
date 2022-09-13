@@ -4,31 +4,31 @@
 
 using namespace std;
 
-// Структура содержащая вектор и число инверсий между его элементами
+// A structure containing a vector and the number of inversions between its elements
 template <typename T>
 struct ArrayAndInv {
 	size_t InvCount;
 	vector <T> Array;
 };
 
-// Сортировка массива и подсчёт количества инверсий
+// Sorting the array and counting the number of inversions
 template <typename T>
 ArrayAndInv<T> SortAndCountInv(vector<T>);
 
-// Слияние двух упорядоченных массивов и подсчёт "разделённых" инверсий
+// Merging two ordered arrays and counting "separated" inversions
 template <typename T>
 ArrayAndInv<T> MergeAndCountInv(vector<T>, vector<T>);
 
-// Перегрузка оператора выходного потока
+// Overload of the output stream operator
 template <typename T>
 ostream& operator<<(ostream&, vector<T>);
 
-// Заполнение вектора случайными числами
+// Filling a vector with random numbers
 vector<int> fillRandom(vector<int>, int, int, int);
 vector<double> fillRandom(vector<double>, int, int, int);
 
 int main() {
-	//Параметры для вычисления случайных чисел
+	//Parameters for calculating random numbers
 	constexpr int MAX = 10;
 	constexpr int MIN = 0;
 	constexpr int AMOUNT = 8;
@@ -42,10 +42,10 @@ int main() {
 	return EXIT_SUCCESS;
 }
 
-// Сортировка массива и подсчёт количества инверсий
+// Sorting the array and counting the number of inversions
 template<typename T>
 ArrayAndInv<T> SortAndCountInv(vector<T> Array){
-	// Два базовых случая
+	// 2 base cases
 	if (Array.size() < 2) return { 0, Array };
 	else if (Array.size() == 2) {
 		if (Array.at(0) > Array.at(1)) {
@@ -56,35 +56,34 @@ ArrayAndInv<T> SortAndCountInv(vector<T> Array){
 			return { 0, Array };
 		}
 	}
-	// Рекурскивный случай
+	// Recursion case
 	vector<T> Left, Right;
 
-	//Разделяем входной массив на две части
+	//Split input array on 2 parts
 	for (size_t i = 0; i < Array.size() / 2; ++i) {
 		Left.push_back(Array.at(i));
 		Right.push_back(Array.at(Array.size()/2 + i));
 	}
 	if (Array.size() % 2 != 0) Right.push_back(Array.back());
 
-	// Сортируем и вычисляем количество инверсий рекурсивно
+	// Sort and calculate the number of inversions recursively
 	ArrayAndInv<T> LeftPart = SortAndCountInv(Left);
 	ArrayAndInv<T> RightPart = SortAndCountInv(Right);
-	// Соединяем два  упорядоченных массива и вычисляем число "разделённых" инверсий
+	// We connect two ordered arrays and calculate the number of "separated" inversions
 	ArrayAndInv<T> Merge = MergeAndCountInv(LeftPart.Array, RightPart.Array);
 
 	return {Merge.InvCount + LeftPart.InvCount + RightPart.InvCount, Merge.Array};
 }
 
-// Слияние двух упорядоченных массивов и подсчёт "разделённых" инверсий
+// Merging two ordered arrays and counting "separated" inversions
 template<typename T>
 ArrayAndInv<T> MergeAndCountInv(vector<T> Left, vector<T> Right){
 	size_t i = 0, j = 0, splitInv = 0;
 	vector<T> Result;
-	// Проходим два входных массива по порядку
-	// В случае окончания одного из массивов числа будут копироваться по порядку из другого
-	// Элемент их первого массива и элемент из второго массива образуют инверсию тогда и только тогда,
-	// когда элемент из второго массива копируется в выходной массив перед элементом из первого массива
-	for (size_t k = 0; k < Left.size() + Right.size(); ++k) {
+	// Passing two input arrays in order
+	// If one of the arrays ends, the numbers will be copied in order from the other
+	// An element of their first array and an element from the second array form an inversion if and only if
+	// when an element from the second array is copied to the output array before an element from the first arrayfor (size_t k = 0; k < Left.size() + Right.size(); ++k) {
 		if (i > Left.size() - 1) {
 			Result.push_back(Right.at(j));
 			++j;
@@ -109,7 +108,7 @@ ArrayAndInv<T> MergeAndCountInv(vector<T> Left, vector<T> Right){
 	return {splitInv, Result};
 }
 
-// Перегрузка оператора выходного потока
+// Overload of the output stream operator
 template<typename T>
 ostream& operator<<(ostream& out, vector<T> Vector){
 	for (size_t i = 0; i < Vector.size(); ++i) {
@@ -118,7 +117,7 @@ ostream& operator<<(ostream& out, vector<T> Vector){
 	return out;
 }
 
-// Функция заполнения вектора целочисленными случайными числами
+// Filling a vector with integers random numbers
 vector<int> fillRandom(vector<int> Numbers, int amount, int min, int max) {
 	random_device rd;
 	mt19937 gen(rd());
@@ -131,7 +130,7 @@ vector<int> fillRandom(vector<int> Numbers, int amount, int min, int max) {
 	return Numbers;
 }
 
-// Функция заполнения вектора действительными случайными числами
+// Filling a vector with real random numbers
 vector<double> fillRandom(vector<double> Numbers, int amount, int min, int max) {
 	random_device rd;
 	mt19937 gen(rd());
